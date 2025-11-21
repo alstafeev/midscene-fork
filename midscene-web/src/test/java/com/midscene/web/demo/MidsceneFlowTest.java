@@ -52,21 +52,20 @@ public class MidsceneFlowTest {
       super.chat(messages);
 
       // Extract instruction from the last user message
-      String instruction = "";
+      StringBuilder instruction = new StringBuilder();
       for (ChatMessage msg : messages) {
-        if (msg instanceof UserMessage) {
-          UserMessage userMsg = (UserMessage) msg;
+        if (msg instanceof UserMessage userMsg) {
           for (dev.langchain4j.data.message.Content content : userMsg.contents()) {
             if (content instanceof dev.langchain4j.data.message.TextContent) {
-              instruction += ((dev.langchain4j.data.message.TextContent) content).text();
+              instruction.append(((dev.langchain4j.data.message.TextContent) content).text());
             }
           }
         }
       }
 
-      if (instruction.contains("Search")) {
+      if (instruction.toString().contains("Search")) {
         return "{ \"actions\": [ { \"type\": \"TYPE\", \"param\": \"Midscene\", \"locate\": { \"left\": 100, \"top\": 100, \"width\": 200, \"height\": 30 } } ] }";
-      } else if (instruction.contains("Click")) {
+      } else if (instruction.toString().contains("Click")) {
         return "{ \"actions\": [ { \"type\": \"TAP\", \"locate\": { \"left\": 100, \"top\": 200, \"width\": 50, \"height\": 50 } } ] }";
       } else {
         // Fallback for other prompts (like "Are you done?")

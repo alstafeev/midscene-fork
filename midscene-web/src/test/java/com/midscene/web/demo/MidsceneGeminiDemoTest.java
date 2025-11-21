@@ -8,7 +8,7 @@ import com.midscene.core.model.GeminiModel;
 import com.midscene.web.driver.PlaywrightDriver;
 import org.junit.jupiter.api.Test;
 
-public class MidsceneGeminiDemo {
+public class MidsceneGeminiDemoTest {
 
   @Test
   public void testSauceDemoWithGemini() {

@@ -8,7 +8,7 @@ import com.midscene.core.model.OpenAIModel;
 import com.midscene.web.driver.PlaywrightDriver;
 import org.junit.jupiter.api.Test;
 
-public class MidsceneDemo {
+public class MidsceneDemoTest {
 
   @Test
   public void testSauceDemo() {

@@ -1,13 +1,13 @@
 package com.midscene.core.model;
 
 import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import java.util.List;
 
 public class GeminiModel implements AIModel {
 
-  private final ChatLanguageModel model;
+  private final ChatModel model;
 
   public GeminiModel(String apiKey, String modelName) {
     this.model = GoogleAiGeminiChatModel.builder()
@@ -18,6 +18,6 @@ public class GeminiModel implements AIModel {
 
   @Override
   public String chat(List<ChatMessage> messages) {
-    return model.generate(messages).content().text();
+    return model.chat(messages).aiMessage().text();
   }
 }

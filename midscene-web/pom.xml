@@ -2,23 +2,31 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <artifactId>midscene-web</artifactId>
+
   <dependencies>
     <dependency>
       <artifactId>midscene-core</artifactId>
       <groupId>com.midscene</groupId>
       <version>${project.version}</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
     <dependency>
-      <artifactId>selenium-java</artifactId>
       <groupId>org.seleniumhq.selenium</groupId>
-      <version>4.15.0</version>
+      <artifactId>selenium-java</artifactId>
+      <version>${selenium.version}</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/com.microsoft.playwright/playwright -->
     <dependency>
-      <artifactId>playwright</artifactId>
       <groupId>com.microsoft.playwright</groupId>
-      <version>1.39.0</version>
+      <artifactId>playwright</artifactId>
+      <version>${playwright.version}</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
     <dependency>
       <artifactId>junit-jupiter</artifactId>
       <groupId>org.junit.jupiter</groupId>
@@ -27,6 +35,14 @@
   </dependencies>
 
   <modelVersion>4.0.0</modelVersion>
+
+  <properties>
+    <selenium.version>4.35.0</selenium.version>
+    <playwright.version>1.56.0</playwright.version>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
   <parent>
     <artifactId>midscene-parent</artifactId>

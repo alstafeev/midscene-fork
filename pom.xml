@@ -2,25 +2,45 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <artifactId>midscene-parent</artifactId>
 
   <dependencyManagement>
     <dependencies>
+      <!-- https://mvnrepository.com/artifact/tools.jackson.core/jackson-databind -->
       <dependency>
+        <groupId>tools.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <groupId>com.fasterxml.jackson.core</groupId>
         <version>${jackson.version}</version>
       </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
       <dependency>
-        <artifactId>junit-jupiter</artifactId>
         <groupId>org.junit.jupiter</groupId>
-        <scope>test</scope>
+        <artifactId>junit-jupiter</artifactId>
         <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+      <dependency>
+        <artifactId>log4j-core</artifactId>
+        <groupId>org.apache.logging.log4j</groupId>
+        <version>2.25.1</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+      <dependency>
+        <artifactId>log4j-api</artifactId>
+        <groupId>org.apache.logging.log4j</groupId>
+        <version>2.25.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
+
   <groupId>com.midscene</groupId>
   <modelVersion>4.0.0</modelVersion>
+
   <modules>
     <module>midscene-core</module>
     <module>midscene-web</module>
@@ -29,10 +49,11 @@
   <packaging>pom</packaging>
 
   <properties>
-    <jackson.version>2.15.2</jackson.version>
-    <junit.version>5.10.0</junit.version>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <jackson.version>3.0.2</jackson.version>
+    <junit.version>5.14.1</junit.version>
+    <log4j2.version>2.25.1</log4j2.version>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 

@@ -30,3 +30,6 @@ dependency-reduced-pom.xml
 
 # Midscene
 midscene_run/
+
+# test class for local LLM model testing
+/midscene-web/src/test/java/com/midscene/web/LocalTestingTest.java

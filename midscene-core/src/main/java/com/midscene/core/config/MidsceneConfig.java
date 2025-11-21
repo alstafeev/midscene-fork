@@ -66,12 +66,7 @@ public class MidsceneConfig {
         throw new IllegalArgumentException("API Key must be provided");
       }
       if (modelName == null || modelName.isEmpty()) {
-        // Set defaults based on provider
-        if (provider == ModelProvider.OPENAI) {
-          modelName = "gpt-4o";
-        } else if (provider == ModelProvider.GEMINI) {
-          modelName = "gemini-1.5-pro";
-        }
+        modelName = provider.getModelName();
       }
       return new MidsceneConfig(this);
     }

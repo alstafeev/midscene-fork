@@ -12,4 +12,5 @@ public class ActionsItem {
   private AIActionType type;
   private String elementSelector;
   private BySelectorType selectorType;
+  private String description;
 }

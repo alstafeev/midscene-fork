@@ -57,6 +57,22 @@
         <artifactId>awaitility</artifactId>
         <version>${awaitility.version}</version>
       </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-junit-jupiter</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -66,6 +82,7 @@
   <modules>
     <module>midscene-core</module>
     <module>midscene-web</module>
+    <module>midscene-visualizer</module>
   </modules>
 
   <packaging>pom</packaging>
@@ -80,6 +97,7 @@
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <mockito.version>5.11.0</mockito.version>
   </properties>
 
   <version>0.1.0-SNAPSHOT</version>

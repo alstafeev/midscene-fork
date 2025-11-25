@@ -7,28 +7,23 @@ import com.midscene.core.model.GeminiModel;
 import com.midscene.core.model.OpenAIModel;
 import com.midscene.core.service.PageDriver;
 import java.util.concurrent.CompletableFuture;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class Agent {
 
-  private final PageDriver driver;
-  private final AIModel aiModel;
   private final Orchestrator orchestrator;
 
   public Agent(PageDriver driver, AIModel aiModel) {
-    this.driver = driver;
-    this.aiModel = aiModel;
     this.orchestrator = new Orchestrator(driver, aiModel);
   }
 
   public static Agent create(MidsceneConfig config, PageDriver driver) {
-    AIModel model;
-    if (config.getProvider() == ModelProvider.OPENAI) {
-      model = new OpenAIModel(config.getApiKey(), config.getModelName());
-    } else if (config.getProvider() == ModelProvider.GEMINI) {
-      model = new GeminiModel(config.getApiKey(), config.getModelName());
-    } else {
-      throw new IllegalArgumentException("Unsupported provider: " + config.getProvider());
-    }
+    AIModel model = switch (config.getProvider()) {
+      case ModelProvider.OPENAI -> new OpenAIModel(config.getApiKey(), config.getModelName());
+      case ModelProvider.GEMINI -> new GeminiModel(config.getApiKey(), config.getModelName());
+    };
+
     return new Agent(driver, model);
   }
 

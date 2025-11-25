@@ -4,7 +4,9 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class GeminiModel implements AIModel {
 
   private final ChatModel model;

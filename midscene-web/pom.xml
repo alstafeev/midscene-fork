@@ -32,6 +32,13 @@
       <groupId>org.junit.jupiter</groupId>
       <scope>test</scope>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <modelVersion>4.0.0</modelVersion>

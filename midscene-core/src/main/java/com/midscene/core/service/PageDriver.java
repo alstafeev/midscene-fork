@@ -1,21 +1,33 @@
 package com.midscene.core.service;
 
-import com.midscene.core.types.Rect;
-import com.midscene.core.types.Size;
+import com.midscene.core.pojo.planning.Locate;
+import com.midscene.core.pojo.type.BySelectorType;
 
 public interface PageDriver {
 
   String getUrl();
 
-  Size getViewportSize();
-
   String getScreenshotBase64();
 
-  void click(Rect rect);
+  String getPageSource();
 
-  void type(Rect rect, String text);
+  void click(Locate locate);
 
-  void scroll(Rect rect, int dx, int dy);
+  void click(BySelectorType selectorType, String elementSelector);
 
-  void hover(Rect rect);
+  void type(Locate locate, String text);
+
+  void type(BySelectorType selectorType, String elementSelector, String text);
+
+  void scrollDown(Locate locate);
+
+  void scrollDown(BySelectorType selectorType, String elementSelector);
+
+  void scrollUp(Locate locate);
+
+  void scrollUp(BySelectorType selectorType, String elementSelector);
+
+  void hover(Locate locate);
+
+  void hover(BySelectorType selectorType, String elementSelector);
 }

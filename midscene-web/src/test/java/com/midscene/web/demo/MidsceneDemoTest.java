@@ -1,40 +1,51 @@
 package com.midscene.web.demo;
 
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserType;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Playwright;
-import com.midscene.core.model.OpenAIModel;
-import com.midscene.web.driver.PlaywrightDriver;
+import com.midscene.core.agent.Agent;
+import com.midscene.core.config.MidsceneConfig;
+import com.midscene.core.config.ModelProvider;
+import com.midscene.web.driver.SeleniumDriver;
+import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
+@Log4j2
 public class MidsceneDemoTest {
 
+  private WebDriver driver;
+
+  @BeforeEach
+  @SneakyThrows
+  void initDriver() {
+    ChromeOptions options = new ChromeOptions();
+    options.addArguments("--remote-allow-origins=*");
+
+    driver = new ChromeDriver(options);
+    driver.manage().window().maximize();
+  }
+
   @Test
-  public void testSauceDemo() {
-    try (Playwright playwright = Playwright.create()) {
-      Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
-      Page page = browser.newPage();
-      page.navigate("https://www.saucedemo.com/");
+  public void localGeminiTest() {
+    driver.get("https://midscenejs.com/");
 
-      PlaywrightDriver driver = new PlaywrightDriver(page);
-      // 2. Create AI Model
-      OpenAIModel aiModel = new OpenAIModel(System.getenv("OPENAI_API_KEY"), "gpt-4o");
+    MidsceneConfig config = MidsceneConfig.builder()
+        .provider(ModelProvider.GEMINI)
+        .apiKey("API_KEY")
+        .modelName("gemini-2.5-pro")
+        .build();
 
-      // 3. Create Agent
-      com.midscene.core.agent.Agent agent = new com.midscene.core.agent.Agent(driver, aiModel);
+    SeleniumDriver driverAdapter = new SeleniumDriver(driver);
+    Agent agent = Agent.create(config, driverAdapter);
 
-      // 4. Run Agent
-      agent.aiAction("Search for 'Midscene' on Google");
+    agent.aiAction("Search for 'MCP server' button in the left sidebar of this site and click it.");
+  }
 
-      // Wait a bit to see result
-      try {
-        Thread.sleep(5000);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-
-      playwright.close();
-    }
+  @AfterEach
+  void shutDownDriver() {
+    driver.quit();
   }
 }

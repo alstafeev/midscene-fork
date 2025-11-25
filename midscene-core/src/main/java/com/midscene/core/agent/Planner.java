@@ -1,50 +1,56 @@
 package com.midscene.core.agent;
 
+import com.midscene.core.agent.promt.PromptManager;
 import com.midscene.core.model.AIModel;
+import com.midscene.core.pojo.planning.PlanningResponse;
+import com.midscene.core.utils.JsonResponseToPojoMapper;
+import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
 import java.util.Collections;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class Planner {
 
-  private static final Logger logger = LoggerFactory.getLogger(Planner.class);
   private final AIModel aiModel;
 
   public Planner(AIModel aiModel) {
     this.aiModel = aiModel;
   }
 
-  public PlanningResponse plan(String instruction, String screenshotBase64, List<ChatMessage> history) {
-    // Construct Message
+  public PlanningResponse plan(String instruction, String screenshotBase64, String pageSource,
+      List<ChatMessage> history) {
+
     UserMessage message;
     if (history.isEmpty()) {
       String promptText = PromptManager.constructPlanningPrompt(instruction);
       message = UserMessage.from(
           TextContent.from(promptText),
-          ImageContent.from(screenshotBase64, "image/png"));
+          ImageContent.from(screenshotBase64, "image/png"),
+          TextContent.from(pageSource));
     } else {
-      // Retry with new screenshot
       message = UserMessage.from(
-          TextContent.from(PromptManager.constructRetryPrompt()),
-          ImageContent.from(screenshotBase64, "image/png"));
+          TextContent.from(PromptManager.constructRetryPrompt(instruction)),
+          ImageContent.from(screenshotBase64, "image/png"),
+          TextContent.from(pageSource));
     }
 
     history.add(message);
 
+    log.debug("Chat Plan message: {}", message);
+
     String responseJson = aiModel.chat(history);
-    logger.info("AI Response: {}", responseJson);
-    history.add(dev.langchain4j.data.message.AiMessage.from(responseJson));
+    log.debug("AI Plan Response: {}", responseJson);
+    history.add(AiMessage.from(responseJson));
 
     try {
-      com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-      return mapper.readValue(responseJson, PlanningResponse.class);
+      return JsonResponseToPojoMapper.mapResponseToClass(responseJson, PlanningResponse.class);
     } catch (Exception e) {
-      logger.error("Failed to parse plan", e);
+      log.error("Failed to parse plan {}", e.getMessage());
       throw new RuntimeException("Failed to parse plan", e);
     }
   }
@@ -55,8 +61,10 @@ public class Planner {
         TextContent.from(promptText),
         ImageContent.from(screenshotBase64, "image/png"));
 
+    log.debug("Chat Query message: {}", message);
+
     String response = aiModel.chat(Collections.singletonList(message));
-    logger.info("AI Response: {}", response);
+    log.debug("AI Query Response: {}", response);
     return response;
   }
 }

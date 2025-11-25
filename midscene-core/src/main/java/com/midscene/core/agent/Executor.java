@@ -1,46 +1,62 @@
 package com.midscene.core.agent;
 
+import com.midscene.core.pojo.planning.ActionsItem;
 import com.midscene.core.service.PageDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Objects;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class Executor {
 
-  private static final Logger logger = LoggerFactory.getLogger(Executor.class);
   private final PageDriver driver;
 
   public Executor(PageDriver driver) {
     this.driver = driver;
   }
 
-  public void execute(PlanningAction action) {
-    logger.info("Executing action: {}", action.type);
-    if ("TAP".equalsIgnoreCase(action.type)) {
-      if (action.locate != null) {
-        driver.click(action.locate);
-      }
-    } else if ("TYPE".equalsIgnoreCase(action.type)) {
-      if (action.locate != null && action.param != null) {
-        driver.type(action.locate, action.param);
-      }
-    } else if ("SCROLL".equalsIgnoreCase(action.type)) {
-      if (action.locate != null) {
-        int dx = 0;
-        int dy = 500; // Default scroll down
-        if (action.param != null && action.param.contains(",")) {
-          try {
-            String[] parts = action.param.split(",");
-            dx = Integer.parseInt(parts[0].trim());
-            dy = Integer.parseInt(parts[1].trim());
-          } catch (NumberFormatException e) {
-            logger.warn("Failed to parse scroll params: {}", action.param);
-          }
+  public void execute(ActionsItem action) {
+    log.info("Executing action: {}", action.getType());
+
+    switch (action.getType()) {
+      case CLICK -> {
+        if (Objects.nonNull(action.getSelectorType()) && Objects.nonNull(action.getElementSelector())) {
+          driver.click(action.getSelectorType(), action.getElementSelector());
         }
-        driver.scroll(action.locate, dx, dy);
+        if (Objects.nonNull(action.getLocate())) {
+          driver.click(action.getLocate());
+        }
       }
-    } else if ("HOVER".equalsIgnoreCase(action.type)) {
-      if (action.locate != null) {
-        driver.hover(action.locate);
+      case TYPE_TEXT -> {
+        if (Objects.nonNull(action.getSelectorType()) && Objects.nonNull(action.getElementSelector())) {
+          driver.type(action.getSelectorType(), action.getElementSelector(), action.getText());
+        }
+        if (Objects.nonNull(action.getLocate()) && Objects.nonNull(action.getText())) {
+          driver.type(action.getLocate(), action.getText());
+        }
+      }
+      case SCROLL_DOWN -> {
+        if (Objects.nonNull(action.getSelectorType()) && Objects.nonNull(action.getElementSelector())) {
+          driver.scrollDown(action.getSelectorType(), action.getElementSelector());
+        }
+        if (Objects.nonNull(action.getLocate())) {
+          driver.scrollDown(action.getLocate());
+        }
+      }
+      case SCROLL_UP -> {
+        if (Objects.nonNull(action.getSelectorType()) && Objects.nonNull(action.getElementSelector())) {
+          driver.scrollUp(action.getSelectorType(), action.getElementSelector());
+        }
+        if (Objects.nonNull(action.getLocate())) {
+          driver.scrollUp(action.getLocate());
+        }
+      }
+      case HOVER -> {
+        if (Objects.nonNull(action.getSelectorType()) && Objects.nonNull(action.getElementSelector())) {
+          driver.hover(action.getSelectorType(), action.getElementSelector());
+        }
+        if (Objects.nonNull(action.getLocate())) {
+          driver.hover(action.getLocate());
+        }
       }
     }
   }

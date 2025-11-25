@@ -1,17 +1,19 @@
 package com.midscene.core.agent;
 
 import com.midscene.core.model.AIModel;
+import com.midscene.core.pojo.planning.ActionsItem;
+import com.midscene.core.pojo.planning.PlanningResponse;
 import com.midscene.core.service.PageDriver;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.UserMessage;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Objects;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class Orchestrator {
 
-  private static final Logger logger = LoggerFactory.getLogger(Orchestrator.class);
   private final PageDriver driver;
   private final Planner planner;
   private final Executor executor;
@@ -23,13 +25,13 @@ public class Orchestrator {
   }
 
   public String query(String question) {
-    logger.info("Querying: {}", question);
+    log.info("Querying: {}", question);
     String screenshotBase64 = driver.getScreenshotBase64();
     return planner.query(question, screenshotBase64);
   }
 
   public void execute(String instruction) {
-    logger.info("Executing instruction: {}", instruction);
+    log.info("Executing instruction: {}", instruction);
 
     List<ChatMessage> history = new ArrayList<>();
     int maxRetries = 3;
@@ -38,27 +40,27 @@ public class Orchestrator {
     for (int i = 0; i < maxRetries && !finished; i++) {
       try {
         String screenshotBase64 = driver.getScreenshotBase64();
+        String pageSource = driver.getPageSource();
 
-        PlanningResponse plan = planner.plan(instruction, screenshotBase64, history);
+        PlanningResponse plan = planner.plan(instruction, screenshotBase64, pageSource, history);
 
-        if (plan.actions != null && !plan.actions.isEmpty()) {
-          for (PlanningAction action : plan.actions) {
+        if (Objects.nonNull(plan.getActions()) && !plan.getActions().isEmpty()) {
+          for (ActionsItem action : plan.getActions()) {
             executor.execute(action);
           }
           finished = true;
         } else {
-          logger.warn("No actions returned by AI.");
-          finished = true;
+          throw new RuntimeException("No actions returned by AI.");
         }
 
       } catch (Exception e) {
-        logger.error("Failed to execute plan (Attempt {})", i + 1, e);
+        log.error("Failed to execute plan (Attempt {}) {}", i + 1, e.getMessage());
         history.add(UserMessage.from("Error executing plan: " + e.getMessage()));
       }
     }
 
     if (!finished) {
-      logger.error("Failed to complete instruction after {} attempts", maxRetries);
+      log.error("Failed to complete instruction after {} attempts", maxRetries);
       throw new RuntimeException("Failed to complete instruction: " + instruction);
     }
   }

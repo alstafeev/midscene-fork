@@ -14,6 +14,13 @@
         <version>${jackson.version}</version>
       </dependency>
 
+      <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-jsr310</artifactId>
+        <version>${jackson.jsr.version}</version>
+      </dependency>
+
       <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
       <dependency>
         <groupId>org.junit.jupiter</groupId>
@@ -26,14 +33,29 @@
       <dependency>
         <artifactId>log4j-core</artifactId>
         <groupId>org.apache.logging.log4j</groupId>
-        <version>2.25.1</version>
+        <version>${log4j2.version}</version>
       </dependency>
 
       <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
       <dependency>
         <artifactId>log4j-api</artifactId>
         <groupId>org.apache.logging.log4j</groupId>
-        <version>2.25.1</version>
+        <version>${log4j2.version}</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+      <dependency>
+        <artifactId>lombok</artifactId>
+        <groupId>org.projectlombok</groupId>
+        <scope>provided</scope>
+        <version>${lombok.version}</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.awaitility/awaitility -->
+      <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>${awaitility.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -50,8 +72,11 @@
 
   <properties>
     <jackson.version>3.0.2</jackson.version>
+    <jackson.jsr.version>2.20.1</jackson.jsr.version>
+    <awaitility.version>4.3.0</awaitility.version>
     <junit.version>5.14.1</junit.version>
     <log4j2.version>2.25.1</log4j2.version>
+    <lombok.version>1.18.42</lombok.version>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

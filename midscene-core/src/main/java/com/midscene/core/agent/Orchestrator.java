@@ -81,11 +81,11 @@ public class Orchestrator {
         String pageSource = driver.getPageSource();
 
         PlanningResponse plan = planner.plan(instruction, screenshotBase64, pageSource, history);
-        context.logPlan(plan.toString()); // Assuming PlanningResponse has a good toString or we should serialize it
+        context.logPlan(plan.toString());
+        context.logAction("Token usage: " + plan.getDescription());
 
         if (Objects.nonNull(plan.getActions()) && !plan.getActions().isEmpty()) {
           for (ActionsItem action : plan.getActions()) {
-            context.logAction("Executing: " + action.getDescription()); // Assuming ActionsItem has description
             executor.execute(action);
           }
           finished = true;

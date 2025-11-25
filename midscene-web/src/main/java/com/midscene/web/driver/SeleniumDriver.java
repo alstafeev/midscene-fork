@@ -131,7 +131,7 @@ public class SeleniumDriver implements PageDriver {
   }
 
   public void waitUntilPageLoaded() {
-    WaitingUtils.waitUntilWithoutException(10, 2000, () -> ElementActions.isPageLoaded.apply(driver),
+    WaitingUtils.waitUntilWithoutException(2, 2000, () -> ElementActions.isPageLoaded.apply(driver),
         "Wait until page loaded");
   }
 

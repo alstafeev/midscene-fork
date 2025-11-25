@@ -9,6 +9,7 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.data.message.TextContent;
 import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.model.chat.response.ChatResponse;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -43,12 +44,16 @@ public class Planner {
 
     log.debug("Chat Plan message: {}", message);
 
-    String responseJson = aiModel.chat(history);
+    ChatResponse chatResponse = aiModel.chat(history);
+    String responseJson = chatResponse.aiMessage().text();
     log.debug("AI Plan Response: {}", responseJson);
     history.add(AiMessage.from(responseJson));
 
     try {
-      return JsonResponseToPojoMapper.mapResponseToClass(responseJson, PlanningResponse.class);
+      PlanningResponse planningResponse = JsonResponseToPojoMapper.mapResponseToClass(responseJson,
+          PlanningResponse.class);
+      planningResponse.setDescription(chatResponse.metadata().tokenUsage().toString());
+      return planningResponse;
     } catch (Exception e) {
       log.error("Failed to parse plan {}", e.getMessage());
       throw new RuntimeException("Failed to parse plan", e);
@@ -63,7 +68,8 @@ public class Planner {
 
     log.debug("Chat Query message: {}", message);
 
-    String response = aiModel.chat(Collections.singletonList(message));
+    ChatResponse chatResponse = aiModel.chat(Collections.singletonList(message));
+    String response = chatResponse.aiMessage().text();
     log.debug("AI Query Response: {}", response);
     return response;
   }

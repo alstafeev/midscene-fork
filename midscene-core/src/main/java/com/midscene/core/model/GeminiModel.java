@@ -2,6 +2,7 @@ package com.midscene.core.model;
 
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +20,7 @@ public class GeminiModel implements AIModel {
   }
 
   @Override
-  public String chat(List<ChatMessage> messages) {
-    return model.chat(messages).aiMessage().text();
+  public ChatResponse chat(List<ChatMessage> messages) {
+    return model.chat(messages);
   }
 }
